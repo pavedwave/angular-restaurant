@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
-  openLoginForm {
+  openLoginForm() {
     this.dialog.open(LoginComponent, {width: '500px', height: '400px'});
   }
 }

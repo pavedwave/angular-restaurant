@@ -32,13 +32,14 @@ import { Comment } from '../shared/comment';
 
     formErrors = {
       'yourname': '',
-      'rating': '',
+      'rating': 5,
       'comment': ''
     };
   
     validationComments = {
       'yourname': {
         'required': 'Name is required.',
+        'minlength': 'Name must be 2 or more chars long.',
         'maxlength': 'Name cannot be more than 25 chars long.'
       },
       'comment': {
@@ -68,6 +69,7 @@ import { Comment } from '../shared/comment';
   createForm() {
     this.commentForm = this.cfb.group({
       yourname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
+      rating: [5],
       comment: ['', [Validators.required]] 
     });
 
@@ -101,8 +103,9 @@ import { Comment } from '../shared/comment';
     this.comment = this.commentForm.value;
     console.log(this.comment);
     this.commentForm.reset({
-      yourname: '',
-      comment: ''
+      comment: '',
+      rating: 5,
+      yourname: ''
     });
     this.commentFormDirective.resetForm();
   }

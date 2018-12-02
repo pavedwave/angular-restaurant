@@ -50,15 +50,21 @@
   </div>
 
   <div fxFlex="40">
-      <h3>Add Your Review</h3>
-      <p>{{ commentForm.value | json }} {{ commentForm.status | json }}</p>
+
+      <mat-list>
+        <mat-list-item *ngIf = "commentForm.valid">
+          <h4 mat-line>"{{ commentForm.value.comment }}"</h4>
+          <h4 mat-line>{{ commentForm.value.rating }} Stars</h4>
+          <h4 mat-line>-{{ commentForm.value.author }} </h4>
+        </mat-list-item>
+      </mat-list>
 
       <form novalidate [formGroup]="commentForm" #cform="ngForm" (ngSubmit)="onSubmit()">
         <p>
           <mat-form-field class="half-width">
-            <input matInput formControlName="yourname" placeholder="Your Name" type="text" required>
-            <mat-error *ngIf="formErrors.yourname">
-              {{ formErrors.yourname }}
+            <input matInput formControlName="author" placeholder="Your Name" type="text" required>
+            <mat-error *ngIf="formErrors.author">
+              {{ formErrors.author }}
             </mat-error>
           </mat-form-field>
         </p>

@@ -31,13 +31,13 @@ import { Comment } from '../shared/comment';
     private cfb: FormBuilder) { this.createForm(); }
 
     formErrors = {
-      'yourname': '',
+      'author': '',
       'rating': 5,
       'comment': ''
     };
   
     validationComments = {
-      'yourname': {
+      'author': {
         'required': 'Name is required.',
         'minlength': 'Name must be 2 or more chars long.',
         'maxlength': 'Name cannot be more than 25 chars long.'
@@ -68,7 +68,7 @@ import { Comment } from '../shared/comment';
 
   createForm() {
     this.commentForm = this.cfb.group({
-      yourname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
+      author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25)]],
       rating: [5],
       comment: ['', [Validators.required]] 
     });
@@ -100,14 +100,18 @@ import { Comment } from '../shared/comment';
   }
 
   onSubmit() {
-    this.comment = this.commentForm.value;
-    console.log(this.comment);
+    
+    const comment = this.commentForm.value;
+
+    this.dish.comments.push({ ...comment, date: new Date().toISOString() });
+
+    this.commentFormDirective.resetForm();
+
     this.commentForm.reset({
       comment: '',
       rating: 5,
-      yourname: ''
+      author: ''
     });
-    this.commentFormDirective.resetForm();
   }
   
 }

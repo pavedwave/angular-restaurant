@@ -13,7 +13,7 @@
             <h3>{{ dish.name | uppercase }}</h3>
           </mat-card-title>
         </mat-card-header>
-        <img mat-card-image src={{dish.image}} alt={{dish.name}}>
+        <img mat-card-image src="{{BaseURL + dish.image}}" alt={{dish.name}}>
         <mat-card-content>
           {{ dish.description }}
         </mat-card-content>
@@ -31,33 +31,23 @@
         </mat-card-actions>
       </mat-card>
   </div>
-  <div fxFlex [hidden]="dish">
+  <div [hidden]="dish">
     <mat-spinner></mat-spinner> <h4>Loading ... Please wait</h4>
   </div>
 
   <div fxFlex="40" *ngIf="dish">
     <mat-list>
-      <h2 mat-header> Comments </h2>
-      <mat-list-item *ngFor="let comments of dish.comments">
-        <p matLine> {{ comments.comment }} </p>
-        <p matLine> {{ comments.rating }} Stars </p>
-        <p matLine> -- {{ comments.author }} {{ comments.date | date }} </p>
+      <h2> Comments </h2>
+      <mat-list-item *ngFor="let comment of dish.comments">
+        <p matLine> {{comment.comment}} </p>
+        <p matLine> {{comment.rating}} Stars </p>
+        <p matLine> -- {{comment.author}} {{comment.date | date}} </p>
       </mat-list-item>
-    </mat-list>
-  </div>
-  <div fxFlex [hidden]="dish">
-    <mat-spinner></mat-spinner> <h4>Loading ... Please wait</h4>
-  </div>
-
-  <div fxFlex="40">
-
-      <mat-list>
-        <mat-list-item *ngIf = "commentForm.valid">
-          <h4 mat-line>"{{ commentForm.value.comment }}"</h4>
-          <h4 mat-line>{{ commentForm.value.rating }} Stars</h4>
-          <h4 mat-line>-{{ commentForm.value.author }} </h4>
-        </mat-list-item>
-      </mat-list>
+      <mat-list-item *ngIf="commentForm.valid">
+        <h4 mat-line>{{commentForm.value.comment}}</h4>
+        <h4 mat-line>{{commentForm.value.rating}} Stars</h4>
+        <h4 mat-line>-{{commentForm.value.author}} </h4>
+      </mat-list-item>
 
       <form novalidate [formGroup]="commentForm" #cform="ngForm" (ngSubmit)="onSubmit()">
         <p>
@@ -79,6 +69,10 @@
         </p>
         <button type="submit" mat-button class="background-primary text-floral-white" [disabled]="commentForm.invalid">Submit</button>
         </form>
+      </mat-list>
+    </div>
+    <div [hidden]="dish">
+      <mat-spinner></mat-spinner> <h4>Loading ... Please wait</h4>
     </div>
 
 </div>

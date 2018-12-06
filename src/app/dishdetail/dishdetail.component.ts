@@ -24,12 +24,13 @@ import { Comment } from '../shared/comment';
   commentForm: FormGroup;
   comment: Comment;
   @ViewChild('cform') commentFormDirective;
+  dishcopy: Dish;
 
   constructor(private dishService: DishService,
     private route: ActivatedRoute,
     private location: Location,
     private cfb: FormBuilder,
-    @Inject('BaseURL') private BaseURL) { this.createForm(); }   // test moving create.Form to ngOnInit()
+    @Inject('BaseURL') private BaseURL) { }  
 
     formErrors = {
       'author': '',
@@ -50,13 +51,13 @@ import { Comment } from '../shared/comment';
 
 
   ngOnInit() {
-    //this.createForm();   // might add to fix bug from Week3 Assignment + delete same from constructor above
+    this.createForm();   
 
     this.dishService.getDishIds()
       .subscribe((dishIds) => this.dishIds = dishIds);
     this.route.params
       .pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-      .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); },
+      .subscribe(dish => { this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
         errmess => this.errMess = <any>errmess);
   } 
 
@@ -104,13 +105,15 @@ import { Comment } from '../shared/comment';
   }
 
   onSubmit() {
-    
-    const comment = this.commentForm.value;
-
-    this.dish.comments.push({ ...comment, date: new Date().toISOString() });
-
+    this.comment = this.commentForm.value;
+    this.comment.date = new Date().toISOString();
+    this.dishcopy.comments.push(this.comment);
+    this.dishService.putDish(this.dishcopy)
+      .subscribe(dish => {
+        this.dish = dish;  this.dishcopy = dish;
+    },
+    errmess => { this.dish = null; this.dishcopy = null; this.errMess = <any>errmess; });
     this.commentFormDirective.resetForm();
-
     this.commentForm.reset({
       comment: '',
       rating: 5,

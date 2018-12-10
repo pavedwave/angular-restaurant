@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Feedback, ContactType } from '../shared/feedback';
 import { FeedbackService } from '../services/feedback.service';
@@ -14,7 +13,8 @@ import { flyInOut, expand } from '../animations/app.animation';
     'style': 'display: block;'
   },
   animations: [
-    flyInOut()
+    flyInOut(),
+    expand()
   ]
 })
 export class ContactComponent implements OnInit {
@@ -103,8 +103,18 @@ export class ContactComponent implements OnInit {
 
   onSubmit() {
     this.feedback = this.feedbackForm.value;
-    this.feedbackService.submitFeedback(this.feedback).subscribe();
-    console.log(this.feedback);
+    this.feedbackCopy = this.feedback;
+    this.feedbackService.submitFeedback(this.feedback).subscribe(feedback => {
+      this.feedbackCopy = feedback;
+      this.showForm = false;
+      this.showSpinner = true;
+      this.showFeedback = true;
+      setTimeout(() => {
+        this.showForm = true;
+        this.showSpinner = false;
+        this.showFeedback = false;
+      }, 5000);
+    });
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
@@ -116,5 +126,4 @@ export class ContactComponent implements OnInit {
     });
     this.feedbackFormDirective.resetForm();
   }
-
 }
